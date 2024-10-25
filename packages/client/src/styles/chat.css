@@ -9,7 +9,8 @@
     flex-direction: column;
     
     background-color: rgb(255, 255, 231);
-    box-shadow: 0px 0px 0px 6px rgba(19, 43, 16, 0.096);
+    outline: 5px solid rgba(19, 43, 16, 0.096);
+    box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
 
     overflow-y: auto;
 
@@ -32,11 +33,13 @@
 }
 
 .chat-input-container{
+    height: 30px;
     align-self: center;
 
     display: flex;
     flex-direction: row;
 
+    justify-content: end;
     align-items: center;
 
     gap: 12px;
@@ -47,28 +50,34 @@
 .chat-text-input{
     min-width: 200px;
 
-    background-color: transparent;
+    background-color: rgb(255, 255, 231);
+    border-radius: 8px;
     border: none;
     outline: none;
 
-    border-bottom: 2px solid black;
+    box-shadow: inset 0px 4px 8px 0px rgba(0, 0, 0, 0.281);
+    outline: 4px solid rgba(19, 43, 16, 0.096);
 
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
 
-    padding: 3px;
+    padding: 8px;
 }
 .chat-text-submit{
     cursor: pointer;
 
-    background-color: transparent;
+    background-color: rgb(255, 255, 231);
     border: none;
     outline: none;
 
     padding: 6px;
-    border-radius: 4px;
+    border-bottom: 4px solid rgba(19, 43, 16, 0.267);
+
+    transition: 120ms ease-out;
 }
 
 .chat-text-submit:hover{
+    box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
     color: darkgoldenrod;
+    border: none;
 }

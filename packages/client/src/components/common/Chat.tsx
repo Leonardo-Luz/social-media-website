@@ -1,6 +1,6 @@
 import { IconType } from "react-icons"
 import { Message } from "./Message"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { message } from "../../types"
 import { messageService } from "../../service/message.service"
 
@@ -53,6 +53,10 @@ export const Chat = ( { Icon, title }: chatProps ) => {
             sendMessage()
     }
 
+    useEffect(() => {
+        getMessagesHandler()
+    }, [])
+
     return(
         <div className="basic-container">
             <div className="home-header">
@@ -71,18 +75,19 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
             <hr className="basic-division" />
 
-            <div className="chat-input-container">
+            <div className="chat-input-container">                
                 <input
                     ref={chatText}
                     type="text" 
                     className="chat-text-input" 
                     onChange={changeHandler}
                     onKeyDown={enterHandler}
+                    placeholder="≫"
                 />
                 <input 
                     type="submit" 
                     value="enviar" 
-                    className="chat-text-submit" 
+                    className="chat-text-submit"
                     onClick={clickHandler}
                 />
             </div>
