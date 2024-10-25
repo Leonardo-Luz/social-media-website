@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true, // This can help with type checking issues in node modules
+    "forceConsistentCasingInFileNames": true
+  }
+}
