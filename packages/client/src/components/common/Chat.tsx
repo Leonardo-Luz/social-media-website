@@ -1,15 +1,12 @@
 import { IconType } from "react-icons"
 import { Message } from "./Message"
 import React, { useRef, useState } from "react"
+import { message } from "../../types"
+import { messageService } from "../../service/message.service"
 
 type chatProps = {
     Icon: IconType,
     title: string
-}
-
-type message = {
-    text: string,
-    sender: "me" | "other"
 }
 
 export const Chat = ( { Icon, title }: chatProps ) => {
@@ -23,16 +20,23 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         setText(e.currentTarget.value);
     }
 
-    const sendMessage = () => {
+    const getMessagesHandler = async () => {
+        const aux = (await (await messageService.getAll()).json()).messages as message[]
+
+        setMessages(() => aux)
+    }    
+
+    const sendMessage = async () => {
         if(!text || text.length <= 0)
             return;
 
-        const send = {
-            sender: "me",
-            text: text
-        } as message
+        await messageService.create({
+            text: text,
+            chatId: "873c6dfa-beac-4a08-88ff-cb8ff4de07a7",
+            userId: "b28225ae-6217-4f49-90a2-f59dd1fb7d79"
+        })
 
-        setMessages(prev => [...prev, send]);
+        getMessagesHandler()
 
         if(chatText.current){
             chatText.current.value = ""
@@ -58,8 +62,8 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
             <div className="chat-container">
             {
-                messages && messages.length > 0 ?
-                    messages.map(message => <Message sender={message.sender} text={message.text} />)
+                (messages && messages.length > 0) ?
+                    messages.map(message => <Message sender={message.userId!} text={message.text} />)
                 :
                     "Não há mensagens neste chat!"
             }

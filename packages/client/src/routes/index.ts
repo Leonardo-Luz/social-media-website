@@ -1,5 +1,4 @@
-export { Error } from "./Error.route";
-export { Home } from "./Home.route";
-
-export { Login } from "./Login.route";
-export { Register } from "./Register.route";
+export * from "./Error.route";
+export * from "./Home.route";
+export * from "./Login.route";
+export * from "./Register.route";
