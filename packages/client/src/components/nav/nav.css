@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: space-between;
 
+    margin-bottom: 20px;
     padding: 14px;
 
     background-color: rgba(19, 43, 16, 0.096);
@@ -13,13 +14,22 @@
 }
 
 .nav-links{
-    width: 20%;
+    width: 26%;
 
     display: flex;
     flex-direction: row;
 
     align-items: center;
     justify-content: space-between;
+}
+
+.nav-link{
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 12px;
 }
 
 .nav-link-active{

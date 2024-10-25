@@ -1,5 +1,6 @@
 
 .footer-container{
+    margin-top: 30px;
     padding: 12px;
 
     display: flex;
@@ -8,5 +9,6 @@
     align-items: center;
     justify-content: space-between;
 
-    background-color: rgba(19, 43, 16, 0.096);
+    background-color: rgba(19, 43, 16, 0.1);
+    box-shadow: inset 0px 12px 0px 0px rgba(48, 128, 35, 0.08);
 }

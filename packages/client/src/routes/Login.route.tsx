@@ -1,25 +1,14 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
-import { BiX } from "react-icons/bi"
 import "../styles/form.css"
+import { FormHeader } from "../components/form/FormHeader";
 
 
 export const Login = () => {
-    const navigate = useNavigate();
-
     return(
         <div className="basic-body">
             <div className="basic-container">
-                <div className="form-header">
-                    <div className="form-header-container">
-                        <p className="form-header-message">login page</p>
-                        <button 
-                            className="form-close-button"
-                            onClick={() => navigate(-1)}
-                        ><BiX/></button>
-                    </div>
-                    <hr className="basic-division"/>
-                </div>
+                <FormHeader title='login page' />
 
                 <div className="form-data">
                     <label className="form-input-label">
