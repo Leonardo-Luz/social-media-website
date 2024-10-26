@@ -13,6 +13,8 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
     const chatText = useRef<HTMLInputElement>(null)
 
+    const watchDatabase = useRef<number | null>(null);
+
     const [ text, setText ] = useState<string>();
     const [ messages, setMessages ] = useState<message[]>([]);
 
@@ -55,6 +57,22 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
     useEffect(() => {
         getMessagesHandler()
+
+        // watchDatabase.current = setInterval(() => {
+        //     getMessagesHandler();
+        // }, 2000)        
+
+        // document.addEventListener('visibilitychange', () => {
+        //     if(document.visibilityState === 'visible' && watchDatabase.current == null)
+        //         watchDatabase.current = setInterval(() => {
+        //             getMessagesHandler();
+        //         }, 2000)
+        //     else{
+        //         clearTimeout(watchDatabase.current!)
+        //         watchDatabase.current = null    
+        //     }
+        // })
+
     }, [])
 
     return(
