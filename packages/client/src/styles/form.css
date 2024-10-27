@@ -112,3 +112,9 @@
     box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
     color: darkgoldenrod;
 }
+
+.form-validation{
+    align-self: flex-end;
+    width: 80%;
+    color: red;
+}

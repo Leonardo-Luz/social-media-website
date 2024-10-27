@@ -8,16 +8,18 @@ import {
   Login, 
   Register 
 } from './routes'
+import { Protected } from './routes/Protected.route.tsx'
+import { Health } from './routes/Health.route.tsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Health> <App/> </Health>,
     errorElement: <Error />,
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Protected> <Home/> </Protected>
       },
       {
         path: '/login',

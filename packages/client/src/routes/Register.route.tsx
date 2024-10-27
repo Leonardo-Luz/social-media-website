@@ -2,40 +2,36 @@ import { Link } from "react-router-dom"
 
 import "../styles/form.css"
 import { FormHeader } from "../components/form/FormHeader"
-import { useState } from "react"
-import { user } from "../types"
-import { userService } from "../service/user.service"
+import { z } from "zod"
+import { useAuth } from "../context/AuthProvider"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+const registerSchema = z.object({
+    name: z.string()
+        .min(1, 'Name is required'),
+    age: z.coerce.number()
+        .min(1, 'Age is required')
+        .gte(12, 'Must be at least 12 years old'),
+    password: z.string()
+        .min(1, 'Name is required'),
+    username: z.string()
+        .min(1, 'Name is required'),
+})
+type registerData = z.infer<typeof registerSchema>
 
 export const Register = () => {
+    const { registerUser } = useAuth();
+
+    const { register, handleSubmit, formState: { errors } } = useForm<registerData>({
+        resolver: zodResolver(registerSchema)
+    })
+
+    const registerHandler = ( form: registerData ) => registerUser(form)
     
-    const [ user, setUser ] = useState<user>({
-        name: '',
-        age: -1,
-        password: '',
-        username: ''
-    });
-
-    const createUserHandler = async () => {
-        if(
-            user.name.length <= 0 ||
-            user.password.length <= 0 ||
-            user.username.length <= 0 ||
-            user.age <= 0
-        )
-            return;
-        else{
-            alert(
-                (await (await 
-                    userService.create(user))
-                        .json())
-                            .message
-            )
-        }
-    }
-
     return(
         <div className="basic-body">
-            <div className="basic-container">
+            <form onSubmit={handleSubmit(registerHandler)} className="basic-container">
                 <FormHeader title="register page" />
 
 
@@ -43,46 +39,68 @@ export const Register = () => {
                     <label className="form-input-label">
                         Name:
                         <input type="text" className="form-input" 
-                            onChange={(e) => setUser(prev => {return {...prev, name: e.target.value}})}
+                            {...register('name')}
                         />
                     </label>
+                    {
+                        errors.name &&
+                        <span className="form-validation">
+                        {
+                            errors.name.message
+                        }
+                        </span>
+                    }
                     <label className="form-input-label">
                         Age:
                         <input type="number" className="form-input" 
-                            onChange={(e) => setUser(prev => {return {...prev, age: parseInt(e.target.value)}})}
+                            {...register('age')}
                         />
                     </label>
+                    {
+                        errors.age &&
+                        <span className="form-validation">
+                        {
+                            errors.age.message
+                        }
+                        </span>
+                    }
                     <label className="form-input-label">
                         Username:
                         <input type="text" className="form-input" 
-                            onChange={(e) => setUser(prev => {return {...prev, username: e.target.value}})}
+                            {...register('username')}
                         />
                     </label>
+                    {
+                        errors.username &&
+                        <span className="form-validation">
+                        {
+                            errors.username.message
+                        }
+                        </span>
+                    }
                     <label className="form-input-label">
                         Password:
                         <input type="password" className="form-input" 
-                            onChange={(e) => setUser(prev => {return {...prev, password: e.target.value}})}
+                            {...register('password')}
                         />
                     </label>
-                    <label className="form-input-label">
-                        Confirm Password:
-                        <input 
-                            type="password" 
-                            className="form-input" 
-                        />
-                    </label>
+                    {
+                        errors.password &&
+                        <span className="form-validation">
+                        {
+                            errors.password.message
+                        }
+                        </span>
+                    }
                 </div>
 
                 <hr className="basic-division" />
                 
                 <div className="form-submit-container">
-                    <input className="form-button" type="submit" value="Cadastrar" 
-                        onClick={() => createUserHandler()}
-                        onKeyDown={(e) => e.key == "Enter" ? createUserHandler() : false}
-                    />
+                    <input className="form-button" type="submit" value="Cadastrar" />
                     <Link to={'/login'} className="form-to-link">Já possui uma conta? <em>Entre!</em></Link>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

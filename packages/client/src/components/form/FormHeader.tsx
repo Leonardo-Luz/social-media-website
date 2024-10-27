@@ -13,6 +13,7 @@ export const FormHeader = ( { title }: formHeaderProps ) => {
             <div className="form-header-container">
                 <p className="form-header-message">{title}</p>
                 <button 
+                    type="button"
                     className="form-close-button"
                     onClick={() => navigate(-1)}
                 ><BiX/></button>

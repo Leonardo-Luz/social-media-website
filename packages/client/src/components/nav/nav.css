@@ -20,10 +20,14 @@
     flex-direction: row;
 
     align-items: center;
-    justify-content: space-between;
+    justify-content: end;
+
+    gap: 20px;
 }
 
 .nav-link{
+    cursor: pointer;
+
     display: flex;
     flex-direction: row;
 

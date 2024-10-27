@@ -25,7 +25,8 @@ export const userModel = sequelize.define<userInterface>(
         },
         username: {
             allowNull: false,
-            type: STRING
+            type: STRING,
+            unique: true
         },
         password: {
             allowNull: false,

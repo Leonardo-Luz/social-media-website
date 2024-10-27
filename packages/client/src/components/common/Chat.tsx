@@ -3,6 +3,7 @@ import { Message } from "./Message"
 import React, { useEffect, useRef, useState } from "react"
 import { message } from "../../types"
 import { messageService } from "../../service/message.service"
+import { useAuth } from "../../context/AuthProvider"
 
 type chatProps = {
     Icon: IconType,
@@ -11,9 +12,9 @@ type chatProps = {
 
 export const Chat = ( { Icon, title }: chatProps ) => {
 
-    const chatText = useRef<HTMLInputElement>(null)
+    const { user } = useAuth()
 
-    const watchDatabase = useRef<number | null>(null);
+    const chatText = useRef<HTMLInputElement>(null);
 
     const [ text, setText ] = useState<string>();
     const [ messages, setMessages ] = useState<message[]>([]);
@@ -34,8 +35,8 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
         await messageService.create({
             text: text,
-            chatId: "873c6dfa-beac-4a08-88ff-cb8ff4de07a7",
-            userId: "b28225ae-6217-4f49-90a2-f59dd1fb7d79"
+            chatId: "c8cd9168-f599-4c1a-accc-a28762e9d087",
+            userId: user?.userId
         })
 
         getMessagesHandler()
