@@ -47,8 +47,6 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
         ws.current && ws.current.send(JSON.stringify(data))
 
-        getMessagesHandler()
-
         if(chatText.current){
             chatText.current.value = ""
             setText(undefined);
