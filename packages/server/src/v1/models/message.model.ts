@@ -1,4 +1,4 @@
-import { Model, Sequelize, STRING } from "sequelize";
+import { Model, Sequelize, STRING, TEXT } from "sequelize";
 import { database } from "../../config/database.config";
 import { message } from "../types";
 import { chatModel } from "./chat.model";
@@ -19,7 +19,7 @@ export const messageModel = sequelize.define<messageInterface>(
         },
         text: {
             allowNull: false,
-            type: STRING
+            type: TEXT
         },
         userId: {
             allowNull: false,

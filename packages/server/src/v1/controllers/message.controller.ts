@@ -58,13 +58,16 @@ class Controller implements DAO<message>{
                     message: "Conflict, Message alredy exists!"
                 })
 
-            await service.create( messageModel, {
+            const parsedMessage = {
                 ...createElement,
                 messageId: uuidv4()
-            } )
+            }
+
+            await service.create( messageModel, parsedMessage )
 
             return res.status(200).json({
-                message: "Message succefully created!"
+                message: "Message succefully created!",
+                data: parsedMessage
             })
         }
         catch(e){

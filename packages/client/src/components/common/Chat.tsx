@@ -12,6 +12,8 @@ type chatProps = {
 
 export const Chat = ( { Icon, title }: chatProps ) => {
 
+    const ws = useRef<WebSocket | null>(null)
+
     const { user } = useAuth()
 
     const chatText = useRef<HTMLInputElement>(null);
@@ -24,20 +26,26 @@ export const Chat = ( { Icon, title }: chatProps ) => {
     }
 
     const getMessagesHandler = async () => {
-        const aux = (await (await messageService.getAll()).json()).messages as message[]
+        const response = await messageService.getAll()
 
-        setMessages(() => aux)
-    }    
+        const data = (await response.json())
+
+        setMessages(() => [...data.messages])
+    }
 
     const sendMessage = async () => {
         if(!text || text.length <= 0)
             return;
 
-        await messageService.create({
+        const response = await messageService.create({
             text: text,
             chatId: "c8cd9168-f599-4c1a-accc-a28762e9d087",
             userId: user?.userId
         })
+
+        const data = (await response.json()).data
+
+        ws.current && ws.current.send(JSON.stringify(data))
 
         getMessagesHandler()
 
@@ -59,21 +67,43 @@ export const Chat = ( { Icon, title }: chatProps ) => {
     useEffect(() => {
         getMessagesHandler()
 
-        // watchDatabase.current = setInterval(() => {
-        //     getMessagesHandler();
-        // }, 2000)        
+        document.addEventListener('visibilitychange', () => {
+            if(!document.hidden) 
+                document.title = 'Social media website'
+        })
 
-        // document.addEventListener('visibilitychange', () => {
-        //     if(document.visibilityState === 'visible' && watchDatabase.current == null)
-        //         watchDatabase.current = setInterval(() => {
-        //             getMessagesHandler();
-        //         }, 2000)
-        //     else{
-        //         clearTimeout(watchDatabase.current!)
-        //         watchDatabase.current = null    
-        //     }
-        // })
+        ws.current = new WebSocket('ws://localhost:8080')
 
+        ws.current.onopen = () => {
+            console.log('Connected to server!');
+        }
+
+        ws.current.onmessage = (message) => {
+            if(document.hidden)
+                document.title = '⚠️ New Message!'
+            
+            const buffer = (JSON.parse(message.data))
+
+            const uint8Array = new Uint8Array(buffer.data);
+            
+            const decoder = new TextDecoder('utf-8');
+            const messageString = decoder.decode(uint8Array);
+
+            try{
+                setMessages(prev => [ ...prev, JSON.parse(messageString) ])
+            }
+            catch(e){
+                console.error('Failed to parse message!');
+            }
+        }
+
+        ws.current.onclose = () => {
+            console.log('Disconnected from server');
+        }
+
+        return () => {
+            ws.current?.close()
+        }
     }, [])
 
     return(
