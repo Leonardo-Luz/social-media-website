@@ -1,0 +1,97 @@
+import { useParams } from "react-router-dom"
+import { useAuth } from "../context/AuthProvider"
+import { useEffect, useState } from "react"
+import { user } from "../types"
+import { userService } from "../service/user.service"
+import { CgProfile } from "react-icons/cg"
+import { BiEdit, BiLogOut } from "react-icons/bi"
+
+import "../styles/profile.css"
+
+export const Profile = () => {
+    const { id } = useParams()
+
+    const { deleteUser, user: loggedUser, logout } = useAuth()
+
+    const [ user, setUser ] = useState<user | null>();
+
+    const deleteHandler = () => {
+        const aux = prompt('Digite sua senha para confirmar a exclusão')
+        
+        if(aux){
+            deleteUser(aux)
+            logout()
+        }
+        else
+            alert('Senha inválida!')
+    }
+
+    const getUserHandler = async ( id: string ) => {
+        const response = await userService.getById(id)
+
+        const data = (await response.json())
+
+        if(data.user)
+            setUser(data.user);
+        // else
+        //     setUser(user)
+    }
+
+    useEffect(() => {
+        if(!id)
+        {
+            setUser(loggedUser);
+
+        }
+        else{
+            getUserHandler(id)
+        }
+    }, [id])
+
+    return(
+        <div className="basic-body">
+            <div className="basic-container">
+                <div className="basic-header">
+                    <h3 className="profile-title">
+                        <CgProfile/> Profile
+                    </h3>
+                    <BiEdit className="profile-edit-icon" />
+                </div>
+                <hr className="basic-division"/>
+
+                <div className="profile-data">
+                {
+                    user ? (
+                        <div>
+                            <label className="profile-label">Nome: <p>{user.name}</p></label>
+                            <label className="profile-label">username: <p>{user.username}</p></label>
+                            <label className="profile-label">age: <p>{user.age}</p></label>
+                        </div>
+                    ) :
+                        <div>
+                            Loading...
+                        </div>
+                }
+                </div>
+
+                <hr className="basic-division"/>
+
+                <div className="profile-buttons">
+                    <button className="basic-button" 
+                        onClick={() => deleteHandler()}
+                    >
+                        Excluir Conta!
+                    </button>
+                    <button className="basic-button"
+                        onClick={() => logout()}
+                    >
+                        <BiLogOut/> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+
+
+
+}

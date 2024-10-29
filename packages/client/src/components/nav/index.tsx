@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import "./nav.css"
 import { BiHome, BiLogOut } from "react-icons/bi"
 import { useAuth } from "../../context/AuthProvider"
+import { CgProfile } from "react-icons/cg"
 
 export const Nav = () => {
     const { isLogged, logout } = useAuth()
@@ -20,15 +21,12 @@ export const Nav = () => {
             </NavLink>
 
             <div className="nav-links">
-                <button className="nav-link"
-                    onClick={() => logout()}
-                >Logout <BiLogOut /></button>
-                {/* <NavLink
+                <NavLink
                     className={({isActive}) => 
                         isActive ? "nav-link nav-link-active" : "nav-link"
                     }
-                    to='/login'
-                >Login<BiLogIn /></NavLink> */}
+                    to='/profile'
+                ><CgProfile size={50} /></NavLink>
             </div>
         </header>
     ) : <p></p>

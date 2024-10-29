@@ -15,9 +15,7 @@ class Service{
     
 
     getById = async ( id: string ) => 
-        fetch(`${this.apiRoute}/${new URLSearchParams({
-            id: id
-        })}`, {
+        fetch(`${this.apiRoute}/${id}`, {
             method: 'GET'
         })
     
@@ -46,9 +44,7 @@ class Service{
         })
 
     delete = async ( id: string ) => 
-        fetch(`${this.apiRoute}/${new URLSearchParams({
-            id: id
-        })}`, {
+        fetch(`${this.apiRoute}/${id}`, {
             method: 'DELETE'
         })
     
@@ -65,9 +61,7 @@ class Service{
         })
 
     selfDelete = async ( id: string, token: string ) =>
-        fetch(`${this.apiRoute}/${new URLSearchParams({
-            id: id
-        })}`, {
+        fetch(`${this.apiRoute}/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`

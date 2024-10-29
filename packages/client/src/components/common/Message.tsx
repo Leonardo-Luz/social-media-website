@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import "../../styles/message.css"
 import { CgProfile } from "react-icons/cg"
 import { useAuth } from "../../context/AuthProvider"
+import { message } from "../../types"
+import { userService } from "../../service/user.service"
 
 type messageProps = {
-    sender: string,
+    sender: message,
     text: string
 }
 
@@ -12,22 +14,34 @@ type messageProps = {
 
 export const Message = ( { sender, text }: messageProps ) => {
 
-    const { user } = useAuth()
+    const { user: loggedUser } = useAuth()
 
     const container = useRef<HTMLDivElement>(null);
 
+    const [ user, setUser ] = useState(loggedUser);
+
+    const getUserHandler = async () => {
+        const res = await userService.getById(sender.userId!)
+
+        const data = await res.json();
+
+        setUser(data.user)
+    }
+
     useEffect(() => {
         container.current?.scrollIntoView()
+
+        getUserHandler()
     }, [container])
 
     return(
-        <div ref={container} className={`message-container ${sender == user?.userId ? 'me' : 'other'}`}>
+        <div ref={container} className={`message-container ${sender.userId == loggedUser?.userId ? 'me' : 'other'}`}>
             {
-                sender != user?.userId && <CgProfile className="message-picture" />
+                sender.userId != loggedUser?.userId && <CgProfile className="message-picture" />
             }
-            <p className="message-text">{text}</p>
+            <p className="message-text"><em>{user?.username}</em><br/><br/>{text}</p>
             {
-                sender == user?.userId && <CgProfile className="message-picture" />
+                sender.userId == loggedUser?.userId && <CgProfile className="message-picture" />
             }
         </div>
     )

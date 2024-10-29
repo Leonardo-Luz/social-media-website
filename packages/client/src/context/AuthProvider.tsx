@@ -111,13 +111,15 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
     const deleteUser = async ( ) => {
         const response = await userService.selfDelete( user!.userId!, token! )
 
+        const data = (await response.json())
+
         switch(response.status){
             case 200:
                 alert('User succefully deleted!')
                 logout()
                 break;
             default:
-                alert('Error on user delete!')
+                alert('Error on user delete!\n' + data.message)
         }
     }
 
@@ -126,6 +128,8 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
         localStorage.removeItem('user')
         setUser(null)
         setToken(null)
+
+        navigate('/')
     }
 
     const isAuth = async () => {

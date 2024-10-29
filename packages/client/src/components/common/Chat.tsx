@@ -114,7 +114,7 @@ export const Chat = ( { Icon, title }: chatProps ) => {
             <div className="chat-container">
             {
                 (messages && messages.length > 0) ?
-                    messages.map(message => <Message sender={message.userId!} text={message.text} />)
+                    messages.map(message => <Message sender={message} text={message.text} />)
                 :
                     "Não há mensagens neste chat!"
             }

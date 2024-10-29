@@ -10,6 +10,7 @@ import {
 } from './routes'
 import { Protected } from './routes/Protected.route.tsx'
 import { Health } from './routes/Health.route.tsx'
+import { Profile } from './routes/Profile.route.tsx'
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,11 @@ const router = createBrowserRouter([
       {
         path: '/register',
         element: <Register />
-      }
+      },
+      {
+        path: '/profile/(id)?/:id?',
+        element: <Profile />
+      },
     ]
   }
 ])
