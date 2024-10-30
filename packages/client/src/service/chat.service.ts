@@ -1,5 +1,5 @@
 import { chat } from "../types";
-import { api } from "../utils/server";
+import { api } from "../utils/api";
 
 class Service{
     private apiRoute;

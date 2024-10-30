@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthProvider"
 import { useEffect, useState } from "react"
 import { user } from "../types"
 import { userService } from "../service/user.service"
-import { CgProfile } from "react-icons/cg"
 import { BiEdit, BiLogOut } from "react-icons/bi"
 
 import "../styles/profile.css"
@@ -33,8 +32,8 @@ export const Profile = () => {
 
         if(data.user)
             setUser(data.user);
-        // else
-        //     setUser(user)
+        else
+            setUser(user)
     }
 
     useEffect(() => {
@@ -53,7 +52,7 @@ export const Profile = () => {
             <div className="basic-container">
                 <div className="basic-header">
                     <h3 className="profile-title">
-                        <CgProfile/> Profile
+                        &ensp;&ensp;Profile
                     </h3>
                     <BiEdit className="profile-edit-icon" />
                 </div>
@@ -77,11 +76,14 @@ export const Profile = () => {
                 <hr className="basic-division"/>
 
                 <div className="profile-buttons">
-                    <button className="basic-button" 
-                        onClick={() => deleteHandler()}
-                    >
-                        Excluir Conta!
-                    </button>
+                    {
+                        !id &&
+                        <button className="basic-button" 
+                            onClick={() => deleteHandler()}
+                        >
+                            Excluir Conta!
+                        </button>
+                    }
                     <button className="basic-button"
                         onClick={() => logout()}
                     >

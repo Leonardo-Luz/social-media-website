@@ -10,6 +10,7 @@ type chatProps = {
     title: string
 }
 
+
 export const Chat = ( { Icon, title }: chatProps ) => {
 
     const ws = useRef<WebSocket | null>(null)
@@ -30,7 +31,7 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
         const data = (await response.json())
 
-        setMessages(() => [...data.messages])
+        setMessages(() => data.messages)
     }
 
     const sendMessage = async () => {
@@ -79,6 +80,9 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         ws.current.onmessage = (message) => {
             if(document.hidden)
                 document.title = '⚠️ New Message!'
+
+            // Shouldnt be necessary but isnt working without it - was working before l o l
+            getMessagesHandler()
             
             const buffer = (JSON.parse(message.data))
 
@@ -114,7 +118,7 @@ export const Chat = ( { Icon, title }: chatProps ) => {
             <div className="chat-container">
             {
                 (messages && messages.length > 0) ?
-                    messages.map(message => <Message sender={message} text={message.text} />)
+                    messages.map(message => <Message message={message} />)
                 :
                     "Não há mensagens neste chat!"
             }

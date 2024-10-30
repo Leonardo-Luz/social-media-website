@@ -1,48 +1,33 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import "../../styles/message.css"
 import { CgProfile } from "react-icons/cg"
 import { useAuth } from "../../context/AuthProvider"
 import { message } from "../../types"
-import { userService } from "../../service/user.service"
 
 type messageProps = {
-    sender: message,
-    text: string
+    message: message,
 }
 
-// sender is gonna be the username of the authenticated user
-
-export const Message = ( { sender, text }: messageProps ) => {
+export const Message = ( { message }: messageProps ) => {
 
     const { user: loggedUser } = useAuth()
 
     const container = useRef<HTMLDivElement>(null);
 
-    const [ user, setUser ] = useState(loggedUser);
-
-    const getUserHandler = async () => {
-        const res = await userService.getById(sender.userId!)
-
-        const data = await res.json();
-
-        setUser(data.user)
-    }
-
     useEffect(() => {
-        container.current?.scrollIntoView()
+        container.current?.parentElement?.scroll
+            (0, container.current?.parentElement?.scrollHeight - container.current.clientHeight)
+    }, [message.user])
 
-        getUserHandler()
-    }, [container])
-
-    return(
-        <div ref={container} className={`message-container ${sender.userId == loggedUser?.userId ? 'me' : 'other'}`}>
+    return message.user ? (
+        <div ref={container} className={`message-container ${message.userId == loggedUser?.userId ? 'me' : 'other'}`}>
             {
-                sender.userId != loggedUser?.userId && <CgProfile className="message-picture" />
+                message.userId != loggedUser?.userId && <CgProfile className="message-picture" />
             }
-            <p className="message-text"><em>{user?.username}</em><br/><br/>{text}</p>
+            <p className="message-text"><em>{message.user!.username}</em><br/><br/>{message.text}</p>
             {
-                sender.userId == loggedUser?.userId && <CgProfile className="message-picture" />
+                message.userId == loggedUser?.userId && <CgProfile className="message-picture" />
             }
         </div>
-    )
+    ) : undefined
 }

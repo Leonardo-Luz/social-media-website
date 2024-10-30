@@ -10,13 +10,15 @@
     
     background-color: rgb(255, 255, 231);
     outline: 5px solid rgba(19, 43, 16, 0.096);
-    box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
+    box-shadow: inset 0px 5px 9px 1px rgba(0, 0, 0, 0.267);
 
     overflow-y: auto;
 
     border-radius: 12px;
 
     margin: 20px;
+
+    scroll-behavior: smooth;
 }
 ::-webkit-scrollbar {
     width: 10px;

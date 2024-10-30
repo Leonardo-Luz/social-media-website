@@ -1,6 +1,7 @@
 import { INTEGER, Model, Sequelize, STRING } from "sequelize";
 import { database } from "../../config/database.config";
 import { user } from "../types";
+import { chatModel } from "./chat.model";
 
 
 const sequelize = database.sequelize as Sequelize;

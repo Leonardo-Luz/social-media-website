@@ -22,7 +22,7 @@ export const messageModel = sequelize.define<messageInterface>(
             type: TEXT
         },
         userId: {
-            allowNull: false,
+            allowNull: true,
             type: STRING,
             references: {
                 key: "userId",
@@ -30,7 +30,7 @@ export const messageModel = sequelize.define<messageInterface>(
             }
         },
         chatId: {
-            allowNull: false,
+            allowNull: true,
             type: STRING,
             references: {
                 key: "chatId",
@@ -43,3 +43,17 @@ export const messageModel = sequelize.define<messageInterface>(
         deletedAt: false
     }
 )
+
+messageModel.hasOne(userModel, {
+    foreignKey: "userId",
+    sourceKey: "userId",
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE"
+})
+
+messageModel.hasOne(chatModel, {
+    foreignKey: "chatId",
+    sourceKey: "chatId",
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE"
+})
