@@ -1,0 +1,34 @@
+import { Link } from "react-router-dom"
+import { user } from "../../types"
+
+import './drop-menu.css'
+import { useRef, useState } from "react"
+
+type dropMenuProps = {
+    list: user[]
+}
+
+export const DropMenu = ( { list }: dropMenuProps ) => {
+
+    const [ show, setShow ] = useState(false) 
+
+    return (
+        <div className="drop-menu-container">
+            <label>
+                <input type="checkbox" className="drop-menu-checkbox" checked={show}
+                    onClick={(e) => setShow(e.currentTarget.checked)}
+                />
+                
+                <p className="drop-menu-button">Usuários Online</p>
+            </label>
+            {
+                (show && list.length > 0 )&&                
+                <div className="drop-menu-list">
+                {
+                    list.map(user => <Link onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
+                }
+                </div>
+            }
+        </div>
+    )
+}

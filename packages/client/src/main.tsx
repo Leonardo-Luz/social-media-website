@@ -1,7 +1,9 @@
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import './index.css'
+
+import App from './App.tsx'
 import { 
   Error, 
   Home, 
@@ -11,6 +13,8 @@ import {
 import { Protected } from './routes/Protected.route.tsx'
 import { Health } from './routes/Health.route.tsx'
 import { Profile } from './routes/Profile.route.tsx'
+
+
 
 const router = createBrowserRouter([
   {

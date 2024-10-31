@@ -1,17 +1,20 @@
-import { IconType } from "react-icons"
-import { Message } from "./Message"
 import React, { useEffect, useRef, useState } from "react"
+import { IconType } from "react-icons"
+
+import { useAuth } from "../../context/AuthProvider"
+
+import { Message } from "./Message"
 import { message } from "../../types"
 import { messageService } from "../../service/message.service"
-import { useAuth } from "../../context/AuthProvider"
 
 type chatProps = {
     Icon: IconType,
     title: string
 }
 
-
 export const Chat = ( { Icon, title }: chatProps ) => {
+
+    const [ , setNewMessage ] = useState(0);
 
     const ws = useRef<WebSocket | null>(null)
 
@@ -67,21 +70,35 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         getMessagesHandler()
 
         document.addEventListener('visibilitychange', () => {
-            if(!document.hidden) 
+            if(!document.hidden) {
                 document.title = 'Social media website'
+
+                const chatContainer = document.getElementsByClassName('chat-container')[0] as HTMLDivElement
+                
+                chatContainer.scroll(0, chatContainer.scrollHeight)
+
+                setNewMessage(0)
+            }
         })
 
-        ws.current = new WebSocket('ws://localhost:8080')
+        ws.current = new WebSocket(import.meta.env.VITE_WS_URL)
 
         ws.current.onopen = () => {
             console.log('Connected to server!');
         }
 
         ws.current.onmessage = (message) => {
-            if(document.hidden)
-                document.title = '⚠️ New Message!'
+            if(document.hidden){
+                setNewMessage(prev => {
+                    const aux = prev+1;
+                    
+                    document.title = `(${aux}) New Message${aux > 1 && 's' || ''} ⚠️!`
 
-            // Shouldnt be necessary but isnt working without it - was working before l o l
+                    return aux;
+                })
+            }
+
+            // Shouldnt be necessary but isnt working without it -> was working before l o l
             getMessagesHandler()
             
             const buffer = (JSON.parse(message.data))

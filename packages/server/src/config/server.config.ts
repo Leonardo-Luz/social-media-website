@@ -1,7 +1,6 @@
 import express, { Application } from "express"
 import WebSocket from "ws";
 
-import { port } from "../utils";
 import { database } from "./database.config";
 
 import { errorHandler, logger, rules } from "../v1/middlewares";
@@ -14,7 +13,7 @@ export class Server{
 
     constructor(){
         this.app = express();
-        this.ws = new WebSocket.Server({port: 8080});
+        this.ws = new WebSocket.Server({port: process.env.WS_PORT as unknown as number});
 
         this.databaseSync();
 
@@ -46,8 +45,8 @@ export class Server{
     }
 
     public start = () => {
-        this.app.listen(port, () => {
-            console.log(`Server listening at http://localhost:${port}`);
+        this.app.listen(process.env.API_PORT, () => {
+            console.log(`Server listening at http://${process.env.API_HOST}:${process.env.API_PORT}`);
         })
     }
 

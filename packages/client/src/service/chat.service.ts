@@ -1,11 +1,10 @@
 import { chat } from "../types";
-import { api } from "../utils/api";
 
 class Service{
     private apiRoute;
 
     constructor( route: string ){
-        this.apiRoute = `${api}/${route}`
+        this.apiRoute = `${import.meta.env.VITE_API_URL}/${route}`
     }
 
     getAll = async () => {

@@ -1,0 +1,68 @@
+
+.drop-menu-container{
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    min-height: 105px;
+}
+
+.drop-menu-list{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    top: 16%;
+
+    gap: 12px;
+    padding: 12px;
+
+    background-color: white;
+
+    box-shadow: inset 0px 5px 4px 1px rgba(19, 43, 16, 0.267);
+    border-radius: 12px;
+
+    outline: 5px solid rgba(19, 43, 16, 0.267);    
+}
+
+.drop-menu-button{
+    cursor: pointer;
+
+    width: 100%;
+
+    background-color: transparent;
+    outline: none;
+    border: none;
+
+    padding: 8px;
+
+    background-color: rgb(255, 255, 231);
+    border-bottom: 9px solid rgba(19, 43, 16, 0.267);
+
+    transition: 80ms ease-out;
+}
+
+.drop-menu-container label{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.drop-menu-button:hover{
+    border: none;
+    box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
+    color: darkgoldenrod;
+}
+
+.drop-menu-checkbox:checked ~ .drop-menu-button{
+    border: none;
+    box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
+    color: darkgoldenrod;
+}
+
+.drop-menu-checkbox{
+    display: none;
+}
