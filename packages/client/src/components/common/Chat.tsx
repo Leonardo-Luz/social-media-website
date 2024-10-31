@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthProvider"
 import { Message } from "./Message"
 import { message } from "../../types"
 import { messageService } from "../../service/message.service"
+import { chatService } from "../../service/chat.service"
 
 type chatProps = {
     Icon: IconType,
@@ -13,20 +14,30 @@ type chatProps = {
 }
 
 export const Chat = ( { Icon, title }: chatProps ) => {
-
-    const [ , setNewMessage ] = useState(0);
-
+    const { user } = useAuth()
+        
     const ws = useRef<WebSocket | null>(null)
 
-    const { user } = useAuth()
+    const [ chatId, setChatId ] = useState<string>()
 
     const chatText = useRef<HTMLInputElement>(null);
-
     const [ text, setText ] = useState<string>();
+    
     const [ messages, setMessages ] = useState<message[]>([]);
+    const [ , setNewMessage ] = useState(0);
+    
+    const chatContainer = useRef<HTMLDivElement>(null)    
 
     const changeHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
         setText(e.currentTarget.value);
+    }
+
+    const getChatIdHandler = async () => {
+        const response = await chatService.getAll()
+
+        const data = await response.json()
+
+        setChatId(data.chats[0].chatId)
     }
 
     const getMessagesHandler = async () => {
@@ -41,11 +52,27 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         if(!text || text.length <= 0)
             return;
 
-        const response = await messageService.create({
+        if(text == "/clear"){
+            chatContainer.current?.scroll(0,0)
+            messageService.deleteAll()
+
+            setMessages([])
+
+            if(chatText.current){
+                chatText.current.value = ""
+                setText(undefined);
+            }
+    
+            return;
+        }
+
+        const send = {
             text: text,
-            chatId: "c8cd9168-f599-4c1a-accc-a28762e9d087",
+            chatId: chatId,
             userId: user?.userId
-        })
+        } as message
+
+        const response = await messageService.create(send)
 
         const data = (await response.json()).data
 
@@ -66,20 +93,22 @@ export const Chat = ( { Icon, title }: chatProps ) => {
             sendMessage()
     }
 
+    const visibilityChangeHandler = () => {
+        if(!(document.visibilityState === 'hidden')) {            
+            document.title = 'Social media website'
+
+            setNewMessage(0)
+
+            chatContainer.current?.scroll(0, chatContainer.current.scrollHeight)
+        }
+    }
+
     useEffect(() => {
+        getChatIdHandler()
+
         getMessagesHandler()
-
-        document.addEventListener('visibilitychange', () => {
-            if(!document.hidden) {
-                document.title = 'Social media website'
-
-                const chatContainer = document.getElementsByClassName('chat-container')[0] as HTMLDivElement
-                
-                chatContainer.scroll(0, chatContainer.scrollHeight)
-
-                setNewMessage(0)
-            }
-        })
+  
+        document.addEventListener('visibilitychange', visibilityChangeHandler)
 
         ws.current = new WebSocket(import.meta.env.VITE_WS_URL)
 
@@ -109,7 +138,11 @@ export const Chat = ( { Icon, title }: chatProps ) => {
             const messageString = decoder.decode(uint8Array);
 
             try{
-                setMessages(prev => [ ...prev, JSON.parse(messageString) ])
+                setMessages(prev => {
+                    const aux = [ ...prev, JSON.parse(messageString) ]
+                
+                    return aux
+                })
             }
             catch(e){
                 console.error('Failed to parse message!');
@@ -122,6 +155,8 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
         return () => {
             ws.current?.close()
+
+            document.removeEventListener('visibilitychange', visibilityChangeHandler)
         }
     }, [])
 
@@ -132,10 +167,18 @@ export const Chat = ( { Icon, title }: chatProps ) => {
                 <hr className="basic-division" />
             </div>
 
-            <div className="chat-container">
+            <div ref={chatContainer} className="chat-container">
             {
                 (messages && messages.length > 0) ?
-                    messages.map(message => <Message message={message} />)
+                    messages.map(message => <>
+                        <Message message={message} />
+                        {
+                            (messages.indexOf(message) != messages.length - 1 && messages[messages.indexOf(message) + 1].userId !== message.userId ) &&
+                                <hr className="chat-division"/>
+                        }
+                    </>
+                )
+                    
                 :
                     "Não há mensagens neste chat!"
             }

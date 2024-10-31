@@ -33,10 +33,7 @@ export const Nav = () => {
                 className={({isActive}) => 
                     isActive ? "nav-link nav-link-active" : "nav-link"
                 }
-            >
-                <BiHome/>
-                Home
-            </NavLink>
+            > <BiHome size={40}/>&ensp;Home </NavLink>
 
             <div className="nav-links">
                 {

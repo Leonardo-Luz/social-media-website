@@ -24,7 +24,13 @@ export const Message = ( { message }: messageProps ) => {
             {
                 message.userId != loggedUser?.userId && <CgProfile className="message-picture" />
             }
-            <p className="message-text"><em>{message.user!.username}</em><br/><br/>{message.text}</p>
+            <p className="message-text">
+                <em>{message.user!.username}</em>
+                    <br/><br/>
+                        {message.text}
+                    <br/><br/>
+                    <em>{message.createdAt.toString().split('T')[1].split('.')[0]}</em>
+            </p>
             {
                 message.userId == loggedUser?.userId && <CgProfile className="message-picture" />
             }

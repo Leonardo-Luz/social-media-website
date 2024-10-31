@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { user } from "../../types"
 
 import './drop-menu.css'
-import { useRef, useState } from "react"
+import { useState } from "react"
 
 type dropMenuProps = {
     list: user[]
@@ -25,7 +25,7 @@ export const DropMenu = ( { list }: dropMenuProps ) => {
                 (show && list.length > 0 )&&                
                 <div className="drop-menu-list">
                 {
-                    list.map(user => <Link onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
+                    list.map(user => <Link className="drop-menu-element" onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
                 }
                 </div>
             }

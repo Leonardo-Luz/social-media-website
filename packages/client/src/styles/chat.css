@@ -2,8 +2,9 @@
 .chat-container{
     align-self: center;
 
-    width: 80%;
-    height: 200px;
+    width: 90%;
+    min-height: 200px;
+    max-height: 500px;
 
     display: flex;
     flex-direction: column;
@@ -82,4 +83,10 @@
     box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
     color: darkgoldenrod;
     border: none;
+}
+
+.chat-division{
+    width: 80%;
+
+    border: 2px dashed black;
 }

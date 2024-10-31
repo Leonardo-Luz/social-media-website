@@ -9,6 +9,8 @@
 }
 
 .drop-menu-list{
+    width: 16%;
+
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -21,9 +23,13 @@
     background-color: white;
 
     box-shadow: inset 0px 5px 4px 1px rgba(19, 43, 16, 0.267);
-    border-radius: 12px;
+    border-radius: 4px;
 
     outline: 5px solid rgba(19, 43, 16, 0.267);    
+}
+
+.drop-menu-element{
+    width: 100%;
 }
 
 .drop-menu-button{
