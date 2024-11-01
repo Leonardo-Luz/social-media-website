@@ -85,8 +85,9 @@ class Controller implements DAO<user>{
     }
 
     // should use payload to verify authentication
-    async updateHandler(req: Request<{}, {}, { updateElement: user; }>, res: Response): Promise<Response> {
+    async updateHandler(req: Request<{id: string}, {}, { updateElement: user; }>, res: Response): Promise<Response> {
         const { updateElement } = req.body
+        const { id } = req.params
 
         const usernameTaken = await service.getByUsername( userModel, updateElement.username )
 
@@ -96,23 +97,23 @@ class Controller implements DAO<user>{
             })
 
         try{
-            const response = await service.getById( userModel, updateElement.userId );
+            const response = await service.getById( userModel, id );
 
-            if(response !== null){
+            if(response != null){
                 response.name       = updateElement.name
                 response.age        = updateElement.age
                 response.username   = updateElement.username
-                response.password   = updateElement.password
+                response.password   = await bycript.hash(updateElement.password, 10)
 
                 await service.update( response )
 
                 return res.status(200).json({
-                    message: 'User succefully updated!'
+                    message: "User succefully updated!"
                 })
             }
             else
                 return res.status(404).json({
-                    message: 'User not found!'
+                    message: "User not found!"
                 })
         }
         catch(e){

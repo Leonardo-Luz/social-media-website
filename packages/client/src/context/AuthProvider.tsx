@@ -96,8 +96,12 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
     }
 
     const updateUser = async ( updatedUser: user ) => {
-        const response = await userService.update( updatedUser )
+        const response = await userService.update( user!.userId!, {...updatedUser, userId: user!.userId!} )
 
+        const json = (await response.json())
+
+        console.log(json);
+        
         // Shouldn't use status code for validation ? 
         switch(response.status){
             case 200:
@@ -106,6 +110,8 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
             default:
                 alert('Error on user update!')
         }
+
+        logout()
     }
 
     const deleteUser = async ( ) => {

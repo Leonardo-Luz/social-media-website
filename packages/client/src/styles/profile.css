@@ -9,6 +9,8 @@
 }
 
 .profile-edit-icon{
+    cursor: pointer;
+    
     font-size: 35px;
 }
 

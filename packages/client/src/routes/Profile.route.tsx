@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthProvider"
 import { useEffect, useState } from "react"
 import { user } from "../types"
@@ -9,6 +9,8 @@ import "../styles/profile.css"
 
 export const Profile = () => {
     const { id } = useParams()
+
+    const navigate = useNavigate();
 
     const { deleteUser, user: loggedUser, logout } = useAuth()
 
@@ -54,7 +56,12 @@ export const Profile = () => {
                     <h3 className="profile-title">
                         &ensp;&ensp;Profile
                     </h3>
-                    <BiEdit className="profile-edit-icon" />
+                    {
+                        !id &&
+                        <BiEdit className="profile-edit-icon" 
+                            onClick={() => navigate('/profile/update')}
+                        />
+                    }
                 </div>
                 <hr className="basic-division"/>
 

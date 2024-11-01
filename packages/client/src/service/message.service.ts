@@ -33,8 +33,8 @@ class Service{
         })
     }
 
-    update = async ( updateElement: message ) => {
-        return fetch(this.apiRoute, {
+    update = async ( id: string, updateElement: message ) => {
+        return fetch(`${this.apiRoute}/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

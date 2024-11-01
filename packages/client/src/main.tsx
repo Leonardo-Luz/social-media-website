@@ -13,6 +13,7 @@ import {
 import { Protected } from './routes/Protected.route.tsx'
 import { Health } from './routes/Health.route.tsx'
 import { Profile } from './routes/Profile.route.tsx'
+import { ProfileUpdate } from './routes/ProfileUpdate.route.tsx'
 
 
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: '/register',
         element: <Register />
+      },
+      {
+        path: '/profile/update',
+        element: <ProfileUpdate />
       },
       {
         path: '/profile/(id)?/:id?',
