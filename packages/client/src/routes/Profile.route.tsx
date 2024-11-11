@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthProvider"
 import { useEffect, useState } from "react"
 import { user } from "../types"
 import { userService } from "../service/user.service"
-import { BiEdit, BiLogOut } from "react-icons/bi"
+import { BiEdit, BiLogOut, BiMessage } from "react-icons/bi"
 
 import "../styles/profile.css"
 
@@ -14,12 +14,12 @@ export const Profile = () => {
 
     const { deleteUser, user: loggedUser, logout } = useAuth()
 
-    const [ user, setUser ] = useState<user | null>();
+    const [user, setUser] = useState<user | null>();
 
     const deleteHandler = () => {
         const aux = prompt('Digite sua senha para confirmar a exclusão')
-        
-        if(aux){
+
+        if (aux) {
             deleteUser(aux)
             logout()
         }
@@ -27,29 +27,28 @@ export const Profile = () => {
             alert('Senha inválida!')
     }
 
-    const getUserHandler = async ( id: string ) => {
+    const getUserHandler = async (id: string) => {
         const response = await userService.getById(id)
 
         const data = (await response.json())
 
-        if(data.user)
+        if (data.user)
             setUser(data.user);
         else
             setUser(user)
     }
 
     useEffect(() => {
-        if(!id)
-        {
+        if (!id) {
             setUser(loggedUser);
 
         }
-        else{
+        else {
             getUserHandler(id)
         }
     }, [id])
 
-    return(
+    return (
         <div className="basic-body">
             <div className="basic-container">
                 <div className="basic-header">
@@ -58,44 +57,53 @@ export const Profile = () => {
                     </h3>
                     {
                         !id &&
-                        <BiEdit className="profile-edit-icon" 
+                        <BiEdit className="profile-edit-icon"
                             onClick={() => navigate('/profile/update')}
                         />
                     }
                 </div>
-                <hr className="basic-division"/>
+                <hr className="basic-division" />
 
                 <div className="profile-data">
-                {
-                    user ? (
-                        <div>
-                            <label className="profile-label">Nome: <p>{user.name}</p></label>
-                            <label className="profile-label">username: <p>{user.username}</p></label>
-                            <label className="profile-label">age: <p>{user.age}</p></label>
-                        </div>
-                    ) :
-                        <div>
-                            Loading...
-                        </div>
-                }
+                    {
+                        user ? (
+                            <div>
+                                <label className="profile-label">Nome: <p>{user.name}</p></label>
+                                <label className="profile-label">username: <p>{user.username}</p></label>
+                                <label className="profile-label">age: <p>{user.age}</p></label>
+                            </div>
+                        ) :
+                            <div>
+                                Loading...
+                            </div>
+                    }
                 </div>
 
-                <hr className="basic-division"/>
+                <hr className="basic-division" />
 
                 <div className="profile-buttons">
                     {
                         !id &&
-                        <button className="basic-button" 
+                        <button className="basic-button"
                             onClick={() => deleteHandler()}
                         >
                             Excluir Conta!
                         </button>
                     }
-                    <button className="basic-button"
-                        onClick={() => logout()}
-                    >
-                        <BiLogOut/> Logout
-                    </button>
+                    {
+                        !id ?
+                            <button className="basic-button"
+                                onClick={() => logout()}
+                            >
+                                <BiLogOut /> Logout
+                            </button>
+                            :
+                            <button className="basic-button"
+                                onClick={() => alert("to chat")}
+                            >
+                                <BiMessage /> Mandar Mensager
+                            </button>
+                    }
                 </div>
             </div>
         </div>

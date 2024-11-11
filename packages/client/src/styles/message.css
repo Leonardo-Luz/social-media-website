@@ -1,15 +1,14 @@
-
-.me{
+.me {
     align-self: flex-end;
     justify-content: end;
 }
 
-.other{
+.other {
     align-self: flex-start;
     justify-content: start;
 }
 
-.message-container{
+.message-container {
     width: 80%;
 
     display: flex;
@@ -22,7 +21,7 @@
     padding: 12px;
 }
 
-.message-text{
+.message-text {
     padding: 12px;
 
     background-color: rgba(19, 43, 16, 0.096);
@@ -35,8 +34,20 @@
     box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.329);
 }
 
-.message-picture{
+.message-picture {
     padding-top: 30px;
     min-width: 20%;
     font-size: 50px;
+}
+
+.message-date-container {
+    width: 100%;
+}
+
+.text-end {
+    text-align: end;
+}
+
+.text-start {
+    text-align: start;
 }

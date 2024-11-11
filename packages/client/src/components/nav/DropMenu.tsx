@@ -8,9 +8,9 @@ type dropMenuProps = {
     list: user[]
 }
 
-export const DropMenu = ( { list }: dropMenuProps ) => {
+export const DropMenu = ({ list }: dropMenuProps) => {
 
-    const [ show, setShow ] = useState(false) 
+    const [show, setShow] = useState(false)
 
     return (
         <div className="drop-menu-container">
@@ -18,15 +18,15 @@ export const DropMenu = ( { list }: dropMenuProps ) => {
                 <input type="checkbox" className="drop-menu-checkbox" checked={show}
                     onClick={(e) => setShow(e.currentTarget.checked)}
                 />
-                
-                <p className="drop-menu-button">Usuários Online</p>
+
+                <p className="drop-menu-button">Usuários</p>
             </label>
             {
-                (show && list.length > 0 )&&                
+                (show && list.length > 0) &&
                 <div className="drop-menu-list">
-                {
-                    list.map(user => <Link className="drop-menu-element" onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
-                }
+                    {
+                        list.map(user => <Link className="drop-menu-element" onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
+                    }
                 </div>
             }
         </div>

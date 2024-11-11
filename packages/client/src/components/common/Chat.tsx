@@ -13,22 +13,22 @@ type chatProps = {
     title: string
 }
 
-export const Chat = ( { Icon, title }: chatProps ) => {
+export const Chat = ({ Icon, title }: chatProps) => {
     const { user } = useAuth()
-        
+
     const ws = useRef<WebSocket | null>(null)
 
-    const [ chatId, setChatId ] = useState<string>()
+    const [chatId, setChatId] = useState<string>()
 
     const chatText = useRef<HTMLInputElement>(null);
-    const [ text, setText ] = useState<string>();
-    
-    const [ messages, setMessages ] = useState<message[]>([]);
-    const [ , setNewMessage ] = useState(0);
-    
-    const chatContainer = useRef<HTMLDivElement>(null)    
+    const [text, setText] = useState<string>();
 
-    const changeHandler = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+    const [messages, setMessages] = useState<message[]>([]);
+    const [, setNewMessage] = useState(0);
+
+    const chatContainer = useRef<HTMLDivElement>(null)
+
+    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setText(e.currentTarget.value);
     }
 
@@ -49,20 +49,20 @@ export const Chat = ( { Icon, title }: chatProps ) => {
     }
 
     const sendMessage = async () => {
-        if(!text || text.length <= 0)
+        if (!text || text.length <= 0)
             return;
 
-        if(text == "/clear"){
-            chatContainer.current?.scroll(0,0)
+        if (text == "/clear") {
+            chatContainer.current?.scroll(0, 0)
             messageService.deleteAll()
 
             setMessages([])
 
-            if(chatText.current){
+            if (chatText.current) {
                 chatText.current.value = ""
                 setText(undefined);
             }
-    
+
             return;
         }
 
@@ -78,23 +78,23 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
         ws.current && ws.current.send(JSON.stringify(data))
 
-        if(chatText.current){
+        if (chatText.current) {
             chatText.current.value = ""
             setText(undefined);
         }
     }
 
-    const clickHandler = ( ) => {
+    const clickHandler = () => {
         sendMessage();
     }
 
-    const enterHandler = ( e: React.KeyboardEvent ) => {
+    const enterHandler = (e: React.KeyboardEvent) => {
         e.key == "Enter" &&
             sendMessage()
     }
 
     const visibilityChangeHandler = () => {
-        if(!(document.visibilityState === 'hidden')) {            
+        if (!(document.visibilityState === 'hidden')) {
             document.title = 'Social media website'
 
             setNewMessage(0)
@@ -107,7 +107,7 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         getChatIdHandler()
 
         getMessagesHandler()
-  
+
         document.addEventListener('visibilitychange', visibilityChangeHandler)
 
         ws.current = new WebSocket(import.meta.env.VITE_WS_URL)
@@ -117,10 +117,10 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         }
 
         ws.current.onmessage = (message) => {
-            if(document.hidden){
+            if (document.hidden) {
                 setNewMessage(prev => {
-                    const aux = prev+1;
-                    
+                    const aux = prev + 1;
+
                     document.title = `(${aux}) New Message${aux > 1 && 's' || ''} ⚠️!`
 
                     return aux;
@@ -129,22 +129,22 @@ export const Chat = ( { Icon, title }: chatProps ) => {
 
             // Shouldnt be necessary but isnt working without it -> was working before l o l
             getMessagesHandler()
-            
+
             const buffer = (JSON.parse(message.data))
 
             const uint8Array = new Uint8Array(buffer.data);
-            
+
             const decoder = new TextDecoder('utf-8');
             const messageString = decoder.decode(uint8Array);
 
-            try{
+            try {
                 setMessages(prev => {
-                    const aux = [ ...prev, JSON.parse(messageString) ]
-                
+                    const aux = [...prev, JSON.parse(messageString)]
+
                     return aux
                 })
             }
-            catch(e){
+            catch (e) {
                 console.error('Failed to parse message!');
             }
         }
@@ -160,44 +160,43 @@ export const Chat = ( { Icon, title }: chatProps ) => {
         }
     }, [])
 
-    return(
+    return (
         <div className="basic-container">
             <div className="home-header">
-                <p><Icon/> {title} <Icon/></p>
+                <p><Icon /> {title} <Icon /></p>
                 <hr className="basic-division" />
             </div>
 
             <div ref={chatContainer} className="chat-container">
-            {
-                (messages && messages.length > 0) ?
-                    messages.map(message => <>
-                        <Message message={message} />
-                        {
-                            (messages.indexOf(message) != messages.length - 1 && messages[messages.indexOf(message) + 1].userId !== message.userId ) &&
-                                <hr className="chat-division"/>
-                        }
-                    </>
-                )
-                    
-                :
-                    "Não há mensagens neste chat!"
-            }
+                {
+                    (messages && messages.length > 0) ?
+                        messages.map(message => <>
+                            <Message message={message} />
+                            {
+                                (messages.indexOf(message) != messages.length - 1 && messages[messages.indexOf(message) + 1].userId !== message.userId) &&
+                                <hr className="chat-division" />
+                            }
+                        </>
+                        )
+
+                        :
+                        "Não há mensagens neste chat!"
+                }
             </div>
 
             <hr className="basic-division" />
 
-            <div className="chat-input-container">                
+            <div className="chat-input-container">
                 <input
                     ref={chatText}
-                    type="text" 
-                    className="chat-text-input" 
+                    type="text"
+                    className="chat-text-input"
                     onChange={changeHandler}
                     onKeyDown={enterHandler}
-                    placeholder="≫"
                 />
-                <input 
-                    type="submit" 
-                    value="enviar" 
+                <input
+                    type="submit"
+                    value="enviar"
                     className="chat-text-submit"
                     onClick={clickHandler}
                 />
