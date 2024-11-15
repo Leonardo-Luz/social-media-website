@@ -26,12 +26,11 @@ export const ProfileUpdate = () => {
         defaultValues: user!
     })
 
-    const updateHandler = ( form: updateData ) => { 
-        updateUser( form )
-        alert(JSON.stringify({...form, userId: user?.userId}))
+    const updateHandler = (form: updateData) => {
+        updateUser(form)
     }
-    
-    return(
+
+    return (
         <div className="basic-body">
             <form onSubmit={handleSubmit(updateHandler)} className="basic-container">
                 <FormHeader title="update page" />
@@ -40,64 +39,64 @@ export const ProfileUpdate = () => {
                 <div className="form-data">
                     <label className="form-input-label">
                         Name:
-                        <input type="text" className="form-input" 
+                        <input type="text" className="form-input"
                             {...register('name')}
                         />
                     </label>
                     {
                         errors.name &&
                         <span className="form-validation">
-                        {
-                            errors.name.message
-                        }
+                            {
+                                errors.name.message
+                            }
                         </span>
                     }
                     <label className="form-input-label">
                         Age:
-                        <input type="number" className="form-input" 
+                        <input type="number" className="form-input"
                             {...register('age')}
                         />
                     </label>
                     {
                         errors.age &&
                         <span className="form-validation">
-                        {
-                            errors.age.message
-                        }
+                            {
+                                errors.age.message
+                            }
                         </span>
                     }
                     <label className="form-input-label">
                         Username:
-                        <input type="text" className="form-input" 
+                        <input type="text" className="form-input"
                             {...register('username')}
                         />
                     </label>
                     {
                         errors.username &&
                         <span className="form-validation">
-                        {
-                            errors.username.message
-                        }
+                            {
+                                errors.username.message
+                            }
                         </span>
                     }
                     <label className="form-input-label">
                         Password:
-                        <input type="password" className="form-input" 
+                        <input type="password" className="form-input"
                             {...register('password')}
                         />
                     </label>
                     {
                         errors.password &&
                         <span className="form-validation">
-                        {
-                            errors.password.message
-                        }
+                            {
+                                errors.password.message
+                            }
                         </span>
                     }
                 </div>
 
                 <hr className="basic-division" />
-                
+
                 <div className="form-submit-container">
                     <input className="form-button" type="submit" value="Atualizar" />
                 </div>

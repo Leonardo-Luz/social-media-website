@@ -2,40 +2,44 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { user } from "../types";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../service/user.service";
+import { Modal } from "../components/common/Modal";
 
 
 type userContext = {
-    user:           user | null,
-    token:          string | null,
-    registerUser:   ( newUser: user ) => Promise<void>;
-    loginUser:      ( login: string , password: string ) => void,
-    updateUser:     ( updatedUser: user ) => Promise<void>;
-    deleteUser:     ( password: string ) => Promise<void>;
-    logout:         () => void,
-    isAuth:         () => void,
-    isLogged:       () => boolean // need to fetch authentication / verify on backend ?
+    user: user | null,
+    token: string | null,
+    registerUser: (newUser: user) => Promise<void>;
+    loginUser: (login: string, password: string) => void,
+    updateUser: (updatedUser: user) => Promise<void>;
+    deleteUser: (password: string) => Promise<void>;
+    logout: () => void,
+    isAuth: () => void,
+    isLogged: () => boolean // need to fetch authentication / verify on backend ?
 }
 
 type authData = {
-    user:   user | null,
-    token:  string | null
+    user: user | null,
+    token: string | null
 }
 
 const AuthContext = createContext<userContext>({} as userContext);
 
-export const AuthProvider = ( {children}: {children: ReactNode} ) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const navigate = useNavigate();
-    
-    const [ token, setToken ] = useState<string | null>(null)
-    const [ user, setUser ] = useState<user | null>(null)
-    const [ status, setStatus ] = useState(false)
+
+    const [token, setToken] = useState<string | null>(null)
+    const [user, setUser] = useState<user | null>(null)
+    const [status, setStatus] = useState(false)
+
+    const [modal, setModal] = useState(false);
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         const user = localStorage.getItem("user")
         const token = localStorage.getItem("token")
 
-        if(user && token){
+        if (user && token) {
             setUser(JSON.parse(user))
             setToken(token)
         }
@@ -44,10 +48,10 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
         setStatus(true)
     }, [])
 
-    const registerUser = async ( newUser: user ) => {
-        const response = await userService.create( newUser )
+    const registerUser = async (newUser: user) => {
+        const response = await userService.create(newUser)
 
-        switch(response.status){
+        switch (response.status) {
             case 200:
                 alert('User succefully created!')
                 navigate('/')
@@ -56,25 +60,27 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
                 alert('Login alredy taken!')
                 break;
             default:
-                alert(`Error! Code ${(await response).status}`)
+                alert(`Error! Code ${(response).status}`)
         }
     }
 
-    const loginUser = async ( username: string, password: string ) => {
+    const loginUser = async (username: string, password: string) => {
 
-        const response = await userService.login( username, password )
+        const response = await userService.login(username, password)
 
         const json = (await response.json())
 
-        if(!json.data){
-            alert('Login or Password invalid!')
+        if (!json.data) {
+            setMessage('Login or Password invalid!')
+            setModal(true)
             return;
         }
-            
+
         const data = json.data as authData
 
-        if(!data.user){
-            alert('Login or Password invalid!')
+        if (!data.user) {
+            setMessage('Login or Password invalid!')
+            setModal(true)
             return;
         }
 
@@ -90,36 +96,37 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
         setToken(data.token)
         setUser(data.user)
 
-        alert('User logged succefully')
+        setMessage('User logged succefully')
+        setModal(true)
 
         navigate('/')
     }
 
-    const updateUser = async ( updatedUser: user ) => {
-        const response = await userService.update( user!.userId!, {...updatedUser, userId: user!.userId!} )
+    const updateUser = async (updatedUser: user) => {
+        const response = await userService.update(user!.userId!, { ...updatedUser, userId: user!.userId! })
 
         const json = (await response.json())
 
-        console.log(json);
-        
         // Shouldn't use status code for validation ? 
-        switch(response.status){
+        switch (response.status) {
             case 200:
-                alert('User succefully updated!')
+                setMessage('User succefully updated!')
+                setModal(true);
                 break;
             default:
-                alert('Error on user update!')
+                setMessage('Error on user update!')
+                setModal(true);
         }
 
         logout()
     }
 
-    const deleteUser = async ( ) => {
-        const response = await userService.selfDelete( user!.userId!, token! )
+    const deleteUser = async () => {
+        const response = await userService.selfDelete(user!.userId!, token!)
 
         const data = (await response.json())
 
-        switch(response.status){
+        switch (response.status) {
             case 200:
                 alert('User succefully deleted!')
                 logout()
@@ -139,22 +146,19 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
     }
 
     const isAuth = async () => {
-        const response = await userService.isAuthenticated( token! )
+        const response = await userService.isAuthenticated(token!)
 
         const message = (await response.json()).message
 
-        console.log(response);
-        console.log(message);
-        
-        if(message != 'Authenticated'){
+        if (message != 'Authenticated') {
             alert('Session expired')
             logout()
         }
     }
 
     useEffect(() => {
-        if(token)
-        isAuth()
+        if (token)
+            isAuth()
     }, [token])
 
     const isLogged = () => !!user
@@ -170,12 +174,18 @@ export const AuthProvider = ( {children}: {children: ReactNode} ) => {
         token,
         user,
     }}>
-    {
-        status ? 
-            children
-        :
-            null
-    }
+        {
+            status ?
+                children
+                :
+                null
+        }
+        {
+            modal &&
+            <Modal setModal={setModal}>
+                <p>{message}</p>
+            </Modal>
+        }
     </AuthContext.Provider>
 }
 
