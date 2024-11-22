@@ -1,5 +1,4 @@
-
-.nav-container{
+.nav-container {
     display: flex;
     flex-direction: row;
 
@@ -13,7 +12,7 @@
     box-shadow: 0px 0px 0px 10px rgba(19, 43, 16, 0.267);
 }
 
-.nav-links{
+.nav-links {
     width: 26%;
 
     display: flex;
@@ -25,7 +24,7 @@
     gap: 40px;
 }
 
-.nav-link{
+.nav-link {
     cursor: pointer;
 
     display: flex;
@@ -36,10 +35,11 @@
     gap: 12px;
 }
 
-.nav-link-active{
+.nav-link-active {
     color: darkgoldenrod;
 }
-.nav-link-active:hover{
+
+.nav-link-active:hover {
     text-decoration: none;
     color: darkgoldenrod;
 }
