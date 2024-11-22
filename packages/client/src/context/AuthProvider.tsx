@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState("");
+    const [modalSwitch, setModalSwitch] = useState<number>();
 
     useEffect(() => {
         const user = localStorage.getItem("user")
@@ -53,14 +54,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         switch (response.status) {
             case 200:
-                alert('User succefully created!')
-                navigate('/')
+                setMessage('User succefully created!')
+                setModalSwitch(1);
+                setModal(true);
                 break;
             case 409:
-                alert('Login alredy taken!')
+                setMessage('Login alredy taken!')
+                setModalSwitch(0);
+                setModal(true);
                 break;
             default:
-                alert(`Error! Code ${(response).status}`)
+                setMessage(`Error! Code ${(response).status}`)
+                setModalSwitch(0);
+                setModal(true);
         }
     }
 
@@ -72,6 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (!json.data) {
             setMessage('Login or Password invalid!')
+            setModalSwitch(0);
             setModal(true)
             return;
         }
@@ -80,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (!data.user) {
             setMessage('Login or Password invalid!')
+            setModalSwitch(0);
             setModal(true)
             return;
         }
@@ -96,25 +104,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setToken(data.token)
         setUser(data.user)
 
-        setMessage('User logged succefully')
-        setModal(true)
-
-        navigate('/')
+        setMessage('User logged succefully');
+        setModalSwitch(1);
+        setModal(true);
     }
 
     const updateUser = async (updatedUser: user) => {
         const response = await userService.update(user!.userId!, { ...updatedUser, userId: user!.userId! })
 
-        const json = (await response.json())
-
         // Shouldn't use status code for validation ? 
         switch (response.status) {
             case 200:
                 setMessage('User succefully updated!')
+                setModalSwitch(0);
                 setModal(true);
                 break;
             default:
                 setMessage('Error on user update!')
+                setModalSwitch(0);
                 setModal(true);
         }
 
@@ -128,11 +135,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         switch (response.status) {
             case 200:
-                alert('User succefully deleted!')
-                logout()
+                setMessage('User succefully deleted!')
+                setModalSwitch(2);
+                setModal(true);
                 break;
             default:
-                alert('Error on user delete!\n' + data.message)
+                setMessage('Error on user delete!\n' + data.message)
+                setModalSwitch(0);
+                setModal(true);
         }
     }
 
@@ -151,8 +161,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const message = (await response.json()).message
 
         if (message != 'Authenticated') {
-            alert('Session expired')
-            logout()
+            setMessage('Session expired')
+            setModalSwitch(2);
+            setModal(true);
         }
     }
 
@@ -181,9 +192,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 null
         }
         {
-            modal &&
-            <Modal setModal={setModal}>
+            (modal && modalSwitch === 0) &&
+            <Modal
+                setModal={setModal}
+            >
                 <p>{message}</p>
+                <button
+                    onClick={() => {
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
+            </Modal>
+        }
+        {
+            (modal && modalSwitch === 1) &&
+            <Modal
+                setModal={setModal}
+            >
+                <p>{message}</p>
+                <button
+                    onClick={() => {
+                        navigate('/')
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
+            </Modal>
+        }
+        {
+            (modal && modalSwitch === 2) &&
+            <Modal
+                setModal={setModal}
+            >
+                <p>{message}</p>
+                <button
+                    onClick={() => {
+                        logout()
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
             </Modal>
         }
     </AuthContext.Provider>

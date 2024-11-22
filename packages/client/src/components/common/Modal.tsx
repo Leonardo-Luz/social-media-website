@@ -21,7 +21,9 @@ export const Modal = ({ title, children, setModal }: modalProps) => {
                     onClick={() => setModal(false)}
                 >x</CgClose>
             </div>
-            <div className="modal-data">{children}</div>
+            <div className="modal-data">
+                {children}
+            </div>
         </div>
     )
 }

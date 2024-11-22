@@ -1,10 +1,10 @@
-*{
+* {
   font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
   font-weight: 100;
   font-style: normal;
 }
 
-#root{
+#root {
   width: 100%;
   min-height: 100vh;
 
@@ -21,7 +21,7 @@
   line-height: 1.5;
 }
 
-body{
+body {
   padding: 0px;
   margin: 0px;
 
@@ -30,25 +30,25 @@ body{
   background-color: rgb(255, 255, 231);
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
 }
 
-a:hover{
+a:hover {
   text-decoration: underline;
   color: darkblue;
 }
 
-h1{
+h1 {
   font-size: 34px;
 }
 
-em{
+em {
   text-decoration: underline;
 }
 
-.basic-body{
+.basic-body {
   width: 100%;
 
   display: flex;
@@ -58,7 +58,7 @@ em{
   justify-content: center;
 }
 
-.basic-container{
+.basic-container {
   min-height: 320px;
   width: 70%;
 
@@ -72,7 +72,7 @@ em{
   box-shadow: 0px 12px 0px 0px rgba(19, 43, 16, 0.267);
 }
 
-.basic-header{
+.basic-header {
   display: flex;
   flex-direction: row;
 
@@ -82,7 +82,7 @@ em{
   padding: 12px;
 }
 
-.basic-division{
+.basic-division {
   width: 100%;
 
   border: none;
@@ -90,10 +90,11 @@ em{
   outline: 3px solid rgb(255, 255, 231);
 }
 
-.basic-button{
+.basic-button {
   cursor: pointer;
 
   width: 30%;
+  min-height: 50px;
 
   background-color: transparent;
   outline: none;
@@ -111,7 +112,7 @@ em{
   transition: 80ms ease-out;
 }
 
-.basic-button:hover{
+.basic-button:hover {
   border: none;
   box-shadow: inset 0px 3px 6px 0px rgba(0, 0, 0, 0.267);
   color: darkgoldenrod;
