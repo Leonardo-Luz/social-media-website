@@ -1,25 +1,25 @@
 import { user } from "../types";
 
-class Service {
+class Service{
     private apiRoute;
 
-    constructor(route: string) {
+    constructor( route: string ){
         this.apiRoute = `${import.meta.env.VITE_API_URL}/${route}`
     }
 
-    getAll = async () =>
+    getAll = async () => 
         fetch(this.apiRoute, {
             method: 'GET'
         })
+    
 
-
-    getById = async (id: string) =>
+    getById = async ( id: string ) => 
         fetch(`${this.apiRoute}/${id}`, {
             method: 'GET'
         })
+    
 
-
-    create = async (createElement: user) =>
+    create = async ( createElement: user ) => 
         fetch(this.apiRoute, {
             method: 'POST',
             headers: {
@@ -29,9 +29,9 @@ class Service {
                 createElement: createElement
             })
         })
+    
 
-
-    update = async (id: string, updateElement: user) =>
+    update = async ( id: string, updateElement: user ) => 
         fetch(`${this.apiRoute}/${id}`, {
             method: 'PUT',
             headers: {
@@ -42,13 +42,13 @@ class Service {
             })
         })
 
-    delete = async (id: string) =>
+    delete = async ( id: string ) => 
         fetch(`${this.apiRoute}/${id}`, {
             method: 'DELETE'
         })
+    
 
-
-    login = async (username: string, password: string) =>
+    login = async ( username: string, password: string ) => 
         fetch(`${this.apiRoute}/login`, {
             method: 'POST',
             headers: {
@@ -59,26 +59,22 @@ class Service {
             })
         })
 
-    selfDelete = async (id: string, password: string, token: string) =>
-        fetch(`${this.apiRoute}/self/${id}`, {
+    selfDelete = async ( id: string, token: string ) =>
+        fetch(`${this.apiRoute}/${id}`, {
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                password: password
-            })
+                Authorization: `Bearer ${token}`
+            }
         })
 
-    isAuthenticated = async (token: string) =>
+    isAuthenticated = async ( token: string ) => 
         fetch(`${this.apiRoute}/authenticated`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-
+    
 }
 
 export const userService = new Service('users');

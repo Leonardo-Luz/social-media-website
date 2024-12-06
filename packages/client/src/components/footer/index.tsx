@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom"
 
 import "./footer.css"
-import { BiMessage } from "react-icons/bi";
+// import logo from '../../images/logo.png';
 
 export const Footer = () => {
     const navigate = useNavigate();
 
-    return (
+    return(
         <footer className="footer-container">
-            <BiMessage
+            <img 
+                src={'#'} 
+                alt="logo" 
                 className="footer-logo"
                 onClick={() => navigate('/')}
             />

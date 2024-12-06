@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { user } from "../types";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../service/user.service";
+import { Modal } from "../components/common/Modal";
 
 
 type userContext = {
@@ -13,7 +14,7 @@ type userContext = {
     deleteUser: (password: string) => Promise<void>;
     logout: () => void,
     isAuth: () => void,
-    isLogged: () => boolean
+    isLogged: () => boolean // need to fetch authentication / verify on backend ?
 }
 
 type authData = {
@@ -30,6 +31,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null)
     const [user, setUser] = useState<user | null>(null)
     const [status, setStatus] = useState(false)
+
+    const [modal, setModal] = useState(false);
+    const [message, setMessage] = useState("");
+    const [modalSwitch, setModalSwitch] = useState<number>();
 
     useEffect(() => {
         const user = localStorage.getItem("user")
@@ -49,14 +54,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         switch (response.status) {
             case 200:
-                alert('User succefully created!')
-                navigate('/')
+                setMessage('User succefully created!')
+                setModalSwitch(1);
+                setModal(true);
                 break;
             case 409:
-                alert('Login alredy taken!')
+                setMessage('Login alredy taken!')
+                setModalSwitch(0);
+                setModal(true);
                 break;
             default:
-                alert(`Error! Code ${response.status}`)
+                setMessage(`Error! Code ${(response).status}`)
+                setModalSwitch(0);
+                setModal(true);
         }
     }
 
@@ -67,14 +77,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const json = (await response.json())
 
         if (!json.data) {
-            alert('Login or Password invalid!')
+            setMessage('Login or Password invalid!')
+            setModalSwitch(0);
+            setModal(true)
             return;
         }
 
         const data = json.data as authData
 
         if (!data.user) {
-            alert('Login or Password invalid!')
+            setMessage('Login or Password invalid!')
+            setModalSwitch(0);
+            setModal(true)
             return;
         }
 
@@ -90,40 +104,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setToken(data.token)
         setUser(data.user)
 
-        alert('User logged succefully')
-
-        navigate('/')
+        setMessage('User logged succefully');
+        setModalSwitch(1);
+        setModal(true);
     }
 
     const updateUser = async (updatedUser: user) => {
         const response = await userService.update(user!.userId!, { ...updatedUser, userId: user!.userId! })
 
+        // Shouldn't use status code for validation ? 
         switch (response.status) {
             case 200:
-                alert('User succefully updated!')
+                setMessage('User succefully updated!')
+                setModalSwitch(0);
+                setModal(true);
                 break;
             default:
-                alert('Error on user update!')
+                setMessage('Error on user update!')
+                setModalSwitch(0);
+                setModal(true);
         }
 
         logout()
     }
 
-    const deleteUser = async (password: string) => {
-        const response = await userService.selfDelete(user!.userId!, password, token!)
+    const deleteUser = async () => {
+        const response = await userService.selfDelete(user!.userId!, token!)
 
         const data = (await response.json())
 
         switch (response.status) {
             case 200:
-                alert('User succefully deleted!')
-                logout()
-                break;
-            case 409:
-                alert('Invalid password')
+                setMessage('User succefully deleted!')
+                setModalSwitch(2);
+                setModal(true);
                 break;
             default:
-                alert('Error on user delete!\n' + data.message)
+                setMessage('Error on user delete!\n' + data.message)
+                setModalSwitch(0);
+                setModal(true);
         }
     }
 
@@ -141,12 +160,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const message = (await response.json()).message
 
-        console.log(response);
-        console.log(message);
-
         if (message != 'Authenticated') {
-            alert('Session expired')
-            logout()
+            setMessage('Session expired')
+            setModalSwitch(2);
+            setModal(true);
         }
     }
 
@@ -173,6 +190,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 children
                 :
                 null
+        }
+        {
+            (modal && modalSwitch === 0) &&
+            <Modal
+                setModal={setModal}
+            >
+                <p>{message}</p>
+                <button
+                    onClick={() => {
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
+            </Modal>
+        }
+        {
+            (modal && modalSwitch === 1) &&
+            <Modal
+                setModal={setModal}
+            >
+                <p>{message}</p>
+                <button
+                    onClick={() => {
+                        navigate('/')
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
+            </Modal>
+        }
+        {
+            (modal && modalSwitch === 2) &&
+            <Modal
+                setModal={setModal}
+            >
+                <p>{message}</p>
+                <button
+                    onClick={() => {
+                        logout()
+                        setModal(false)
+                    }}
+                    className="basic-button"
+                >Confirm</button>
+            </Modal>
         }
     </AuthContext.Provider>
 }

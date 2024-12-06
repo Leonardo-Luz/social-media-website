@@ -6,8 +6,8 @@ import { userModel } from "./user.model";
 
 const sequelize = database.sequelize as Sequelize;
 
-export interface chatInterface extends Model<chat>,
-    chat { }
+export interface chatInterface extends Model<chat>, 
+chat{}
 
 export const chatModel = sequelize.define<chatInterface>(
     'chats',
@@ -50,6 +50,6 @@ userModel.belongsToMany(chatModel, {
 chatModel.hasMany(userModel, {
     foreignKey: "userId",
     sourceKey: "adminId",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE"
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION"
 })

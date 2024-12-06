@@ -22,12 +22,10 @@ export const DropMenu = ({ list }: dropMenuProps) => {
                 <p className="drop-menu-button">Usuários</p>
             </label>
             {
-                show &&
+                (show && list.length > 0) &&
                 <div className="drop-menu-list">
                     {
-                        list.length > 0 ?
-                            list.map(user => <Link className="drop-menu-element" onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
-                            : <p>Nenhum Usuário cadastrado!</p>
+                        list.map(user => <Link className="drop-menu-element" onClick={() => setShow(false)} to={`/profile/${user.userId}`}>{user.username}</Link>)
                     }
                 </div>
             }

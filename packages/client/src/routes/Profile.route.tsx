@@ -6,20 +6,29 @@ import { userService } from "../service/user.service"
 import { BiEdit, BiLogOut, BiMessage } from "react-icons/bi"
 
 import "../styles/profile.css"
+import { Modal } from "../components/common/Modal"
 
 export const Profile = () => {
     const { id } = useParams()
-
+    const { deleteUser, user: loggedUser, logout } = useAuth()
     const navigate = useNavigate();
 
-    const { deleteUser, user: loggedUser, logout } = useAuth()
+    const [modal, setModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+
+    const [confirmPass, setConfirmPass] = useState("");
 
     const [user, setUser] = useState<user | null>();
 
-    const deleteHandler = () => {
-        const aux = prompt('Digite sua senha para confirmar a exclusão')
 
-        deleteUser(aux!);
+    const confirmDelete = () => {
+        setModalMessage('Digite sua senha para confirmar a exclusão');
+        setModal(true);
+    }
+
+    const deleteHandler = () => {
+        deleteUser(confirmPass);
+        logout();
     }
 
     const getUserHandler = async (id: string) => {
@@ -80,7 +89,7 @@ export const Profile = () => {
                     {
                         !id &&
                         <button className="basic-button"
-                            onClick={() => deleteHandler()}
+                            onClick={() => confirmDelete()}
                         >
                             Excluir Conta!
                         </button>
@@ -101,6 +110,31 @@ export const Profile = () => {
                     }
                 </div>
             </div>
+            {
+                modal &&
+                <Modal setModal={setModal} title="Ateção!" >
+                    <p>
+                        {modalMessage}
+                    </p>
+                    <input type="password" onChange={(e) => setConfirmPass(e.target.value)} />
+                    <div
+                        className="buttons-container"
+                    >
+                        <button
+                            onClick={() => setModal(false)}
+                            className="basic-button"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => deleteHandler()}
+                            className="basic-button"
+                        >
+                            Confirm
+                        </button>
+                    </div>
+                </Modal>
+            }
         </div>
     )
 }
