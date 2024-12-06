@@ -7,13 +7,13 @@ import { errorHandler, logger, rules } from "../v1/middlewares";
 import { chatRouter, healthRouter, messageRouter, userRouter } from "../v1/routes";
 
 
-export class Server{
+export class Server {
     private app: Application;
     private ws: WebSocket.Server<typeof WebSocket>
 
-    constructor(){
+    constructor() {
         this.app = express();
-        this.ws = new WebSocket.Server({port: process.env.WS_PORT as unknown as number});
+        this.ws = new WebSocket.Server({ port: process.env.WS_PORT as unknown as number });
 
         this.databaseSync();
 
@@ -53,12 +53,12 @@ export class Server{
     public webSocketStart = () => {
         this.ws.on('connection', socket => {
             console.log(`New client connected!`);
-        
+
             socket.on('message', message => {
 
-                this.ws.clients.forEach( client => {
+                this.ws.clients.forEach(client => {
                     (client.readyState === WebSocket.OPEN) &&
-                    client.send(JSON.stringify(message))
+                        client.send(JSON.stringify(message))
                 })
             })
 
