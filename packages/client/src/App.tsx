@@ -8,9 +8,9 @@ function App() {
     <AuthProvider>
       <Nav />
 
-      <Outlet/>
+      <Outlet />
 
-      <Footer/>
+      <Footer />
     </AuthProvider>
   )
 }

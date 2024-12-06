@@ -7,8 +7,8 @@ import { userModel } from "./user.model";
 
 const sequelize = database.sequelize as Sequelize;
 
-export interface messageInterface extends Model<message>, 
-message{}
+export interface messageInterface extends Model<message>,
+    message { }
 
 export const messageModel = sequelize.define<messageInterface>(
     'messages',
@@ -24,18 +24,10 @@ export const messageModel = sequelize.define<messageInterface>(
         userId: {
             allowNull: true,
             type: STRING,
-            references: {
-                key: "userId",
-                model: userModel,
-            }
         },
         chatId: {
             allowNull: true,
             type: STRING,
-            references: {
-                key: "chatId",
-                model: chatModel,
-            }
         }
     },
     {
@@ -47,13 +39,15 @@ export const messageModel = sequelize.define<messageInterface>(
 messageModel.hasOne(userModel, {
     foreignKey: "userId",
     sourceKey: "userId",
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE"
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    hooks: true
 })
 
 messageModel.hasOne(chatModel, {
     foreignKey: "chatId",
     sourceKey: "chatId",
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE"
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    hooks: true
 })
