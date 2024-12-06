@@ -8,36 +8,36 @@ import { user } from "../types"
 import { DAO } from "./dao.controller"
 import { userModel } from "../models/user.model";
 
-class Controller implements DAO<user>{
+class Controller implements DAO<user> {
     async getAllHandler(req: Request, res: Response): Promise<Response> {
-        try{
-            const response = await service.getAll( userModel );
+        try {
+            const response = await service.getAll(userModel);
 
-            response.forEach( data => data.password = '_' )
+            response.forEach(data => data.password = '_')
 
             return res.status(200).json({
-                users: response 
+                users: response
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
             })
-        }        
+        }
     }
 
     async getByIdHandler(req: Request<{ id: string; }>, res: Response): Promise<Response> {
         const { id } = req.params
 
-        try{
-            const response = await service.getById( userModel, id );
+        try {
+            const response = await service.getById(userModel, id);
 
-            if(response == null)
+            if (response == null)
                 return res.status(404).json({
                     message: 'User not found!'
                 })
-            else{
+            else {
                 response.password = '_';
 
                 return res.status(200).json({
@@ -45,7 +45,7 @@ class Controller implements DAO<user>{
                 })
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
@@ -59,24 +59,24 @@ class Controller implements DAO<user>{
             password: await bycript.hash(req.body.createElement.password, 10)
         }
 
-        try{
-            const response = await service.getByUsername( userModel, createElement.username);
+        try {
+            const response = await service.getByUsername(userModel, createElement.username);
 
-            if(response !== null)
+            if (response !== null)
                 return res.status(409).json({
                     message: "Conflict, User alredy exists!"
                 })
 
-            await service.create( userModel, {
+            await service.create(userModel, {
                 ...createElement,
                 userId: uuidv4()
-            } )
+            })
 
             return res.status(200).json({
                 message: "User succefully created!"
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
@@ -85,27 +85,27 @@ class Controller implements DAO<user>{
     }
 
     // should use payload to verify authentication
-    async updateHandler(req: Request<{id: string}, {}, { updateElement: user; }>, res: Response): Promise<Response> {
+    async updateHandler(req: Request<{ id: string }, {}, { updateElement: user; }>, res: Response): Promise<Response> {
         const { updateElement } = req.body
         const { id } = req.params
 
-        const usernameTaken = await service.getByUsername( userModel, updateElement.username )
+        const usernameTaken = await service.getByUsername(userModel, updateElement.username)
 
-        if(usernameTaken && usernameTaken.userId !== updateElement.userId)
+        if (usernameTaken && usernameTaken.userId !== updateElement.userId)
             return res.status(409).json({
                 message: 'Conflict, Username alredy taken!'
             })
 
-        try{
-            const response = await service.getById( userModel, id );
+        try {
+            const response = await service.getById(userModel, id);
 
-            if(response != null){
-                response.name       = updateElement.name
-                response.age        = updateElement.age
-                response.username   = updateElement.username
-                response.password   = await bycript.hash(updateElement.password, 10)
+            if (response != null) {
+                response.name = updateElement.name
+                response.age = updateElement.age
+                response.username = updateElement.username
+                response.password = await bycript.hash(updateElement.password, 10)
 
-                await service.update( response )
+                await service.update(response)
 
                 return res.status(200).json({
                     message: "User succefully updated!"
@@ -116,7 +116,7 @@ class Controller implements DAO<user>{
                     message: "User not found!"
                 })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
@@ -124,47 +124,54 @@ class Controller implements DAO<user>{
         }
     }
 
-    async selfDeleteHandler( req: Request<{ id: string; }>, res: Response ): Promise<Response> {
+    async selfDeleteHandler(req: Request<{ id: string; }, {}, { password: string; }>, res: Response): Promise<Response> {
         const { id } = req.params
+        const { password } = req.body
 
         const payload = res.locals.payload
 
-        try{
-            if(id != payload.userId)
+        try {
+            if (id != payload.id)
                 return res.status(401).json({
                     message: 'User unauthorized!'
                 })
 
-            const response = await service.getById( userModel, id );
+            const response = await service.getById(userModel, id);
 
-            if(response !== null){
-                await service.delete( response );
+            if (response !== null) {
+                if (!(await bycript.compare(password, response.password)))
+                    return res.status(409).json({
+                        message: 'Invalid password!'
+                    })
+                else {
+                    await service.delete(response);
 
-                return res.status(200).json({
-                    message: 'User succefully deleted!'
-                })
+                    return res.status(200).json({
+                        message: 'User succefully deleted!'
+                    })
+                }
             }
             else
-            return res.status(404).json({
-                message: 'User not found!'
-            })
+                return res.status(404).json({
+                    message: 'User not found!'
+                })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
             })
-        }        
+        }
     }
 
-    async deleteHandler( req: Request<{ id: string; }>, res: Response ): Promise<Response> {
+    async deleteHandler(req: Request<{ id: string; }>, res: Response): Promise<Response> {
         const { id } = req.params
 
-        try{
-            const response = await service.getById( userModel, id );
+        try {
+            const response = await service.getById(userModel, id);
 
-            if(response !== null){
-                await service.delete( response );
+            if (response !== null) {
+                await service.delete(response);
 
                 return res.status(200).json({
                     message: 'User succefully deleted!'
@@ -175,7 +182,7 @@ class Controller implements DAO<user>{
                     message: 'User not found!'
                 })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
@@ -183,21 +190,21 @@ class Controller implements DAO<user>{
         }
     }
 
-    async authenticateUserHandler( req: Request<{}, {}, {user: user}>, res: Response ): Promise<Response> {
+    async authenticateUserHandler(req: Request<{}, {}, { user: user }>, res: Response): Promise<Response> {
         const { username, password } = req.body.user
 
-        try{
-            const user = await service.getByUsername( userModel, username );
+        try {
+            const user = await service.getByUsername(userModel, username);
 
-            if(!user || !(await bycript.compare(password, user.password)))
+            if (!user || !(await bycript.compare(password, user.password)))
                 return res.status(401).json({
                     message: 'Invalid password or username!'
                 })
-            
+
             const token = jwt.sign({
                 id: user.userId
             },
-            process.env.JWT_PASS!, {
+                process.env.JWT_PASS!, {
                 expiresIn: '1d'
             })
 
@@ -214,7 +221,7 @@ class Controller implements DAO<user>{
                 }
             })
         }
-        catch(e){
+        catch (e) {
             console.log(e);
             return res.status(500).json({
                 message: "Server Error!"
@@ -222,7 +229,7 @@ class Controller implements DAO<user>{
         }
     }
 
-    async isAuthenticated( req: Request, res: Response ): Promise<Response> {
+    async isAuthenticated(req: Request, res: Response): Promise<Response> {
         return res.status(200).json({
             message: 'Authenticated'
         })
