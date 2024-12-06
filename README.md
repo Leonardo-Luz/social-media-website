@@ -10,13 +10,13 @@ Leonardo Luz <br/>
 1. Typescript
 2. Dotenv
 
-1. Cliente
+3. Cliente
     1. react
     2. react-router-dom
     3. react-hook-form
     4. zod
     5. react-icons
-2. Servidor
+4. Servidor
     1. express
     2. nodemon
     3. ts-node
@@ -29,7 +29,9 @@ Leonardo Luz <br/>
 ## Configuração
 
 ### Requisitos
-1. Nodejs
+1. node
+2. npm
+3. git
 
 ### Clone o repositório
 ```
@@ -93,7 +95,6 @@ POSTGRES_DB         =   YOUR_DATABASE
 ##### MYSQL
 ```
 MYSQL_HOST       =  YOUR_MYSQL_HOST
-MYSQL_PORT       =  YOUR_MYSQL_PORT
 MYSQL_USER       =  YOUR_MYSQL_USER
 MYSQL_PASSWORD   =  YOUR_MYSQL_PASSWORD
 MYSQL_DB         =  YOUR_DATABASE
@@ -112,7 +113,7 @@ CREATE DATABASE YOUR_DATABASE
 cd social-media-website
 npm run client
 
-OR
+# OR
 
 cd social-media-website/packages/client
 npm run dev
@@ -123,7 +124,7 @@ npm run dev
 cd social-media-website
 npm run server
 
-OR
+# OR
 
 cd social-media-website/packages/server
 npm run dev
