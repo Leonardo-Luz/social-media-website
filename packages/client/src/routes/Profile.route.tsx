@@ -19,7 +19,10 @@ export const Profile = () => {
     const deleteHandler = () => {
         const aux = prompt('Digite sua senha para confirmar a exclusão')
 
-        deleteUser(aux!);
+        if (aux)
+            deleteUser(aux);
+        else
+            alert("Ação cancelada")
     }
 
     const getUserHandler = async (id: string) => {
