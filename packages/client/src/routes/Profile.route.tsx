@@ -82,7 +82,7 @@ export const Profile = () => {
                 <div className="profile-buttons">
                     {
                         !id &&
-                        <button className="basic-button"
+                        <button className="basic-button" name="delete-account-button"
                             onClick={() => deleteHandler()}
                         >
                             Excluir Conta!
@@ -90,7 +90,7 @@ export const Profile = () => {
                     }
                     {
                         !id ?
-                            <button className="basic-button"
+                            <button className="basic-button" name="logout-button"
                                 onClick={() => logout()}
                             >
                                 <BiLogOut /> Logout

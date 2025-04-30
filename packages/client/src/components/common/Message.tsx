@@ -57,8 +57,8 @@ export const Message = ({ message }: messageProps) => {
                 message.userId != loggedUser?.userId && <CgProfile className="message-picture" />
             }
             <p className="message-text">
-                <em>{message.user!.username}</em>
-                {": " + message.text}
+                <em>{message.user!.username}:</em>
+                <label className="message-raw">{message.text}</label>
                 <br /><br />
                 <div
                     className={

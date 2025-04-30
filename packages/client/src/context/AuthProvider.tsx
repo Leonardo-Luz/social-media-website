@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         switch (response.status) {
             case 200:
                 alert('User succefully created!')
-                navigate('/')
+                loginUser(newUser.username, newUser.password);
                 break;
             case 409:
                 alert('Login alredy taken!')

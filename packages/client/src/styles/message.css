@@ -24,6 +24,9 @@
 .message-text {
     padding: 12px;
 
+    max-width: 60%;
+    overflow-wrap: break-word;
+
     background-color: rgba(19, 43, 16, 0.096);
     border-radius: 12px;
 

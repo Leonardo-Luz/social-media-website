@@ -12,7 +12,7 @@ import { user } from "../../types"
 export const Nav = () => {
     const { isLogged } = useAuth()
 
-    const [ users, setUsers ] = useState<user[]>();
+    const [users, setUsers] = useState<user[]>();
 
     const getUsersHandler = async () => {
         const response = await userService.getAll()
@@ -28,20 +28,20 @@ export const Nav = () => {
 
     return isLogged() ? (
         <header className="nav-container">
-            <NavLink 
+            <NavLink
                 to='/'
-                className={({isActive}) => 
+                className={({ isActive }) =>
                     isActive ? "nav-link nav-link-active" : "nav-link"
                 }
-            > <BiHome size={40}/>&ensp;Home </NavLink>
+            > <BiHome size={40} />&ensp;Home </NavLink>
 
             <div className="nav-links">
                 {
                     users &&
                     <DropMenu list={users} />
                 }
-                <NavLink
-                    className={({isActive}) => 
+                <NavLink id="link-to-profile"
+                    className={({ isActive }) =>
                         isActive ? "nav-link nav-link-active" : "nav-link"
                     }
                     to='/profile'
